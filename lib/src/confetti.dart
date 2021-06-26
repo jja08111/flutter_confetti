@@ -225,12 +225,9 @@ class _ConfettiWidgetState extends State<ConfettiWidget>
   }
 
   void _startAnimation() {
-    // Make sure widgets are built before setting screen size and position
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      _setScreenSize();
-      _setEmitterPosition();
-      _animController.forward(from: 0);
-    });
+    _setScreenSize();
+    _setEmitterPosition();
+    _animController.forward(from: 0);
   }
 
   void _stopAnimation() {
@@ -367,8 +364,13 @@ class ParticlePainter extends CustomPainter {
 }
 
 class ConfettiController extends ChangeNotifier {
-  ConfettiController({this.duration = const Duration(seconds: 30)})
-      : assert(!duration.isNegative && duration.inMicroseconds > 0);
+  ConfettiController({
+    this.delayStart = Duration.zero,
+    this.duration = const Duration(seconds: 30),
+  }) :  assert(!delayStart.isNegative && delayStart.inMicroseconds > 0),
+        assert(!duration.isNegative && duration.inMicroseconds > 0);
+
+  Duration delayStart;
 
   Duration duration;
 
@@ -376,7 +378,8 @@ class ConfettiController extends ChangeNotifier {
 
   ConfettiControllerState get state => _state;
 
-  void play() {
+  void play() async {
+    await Future.delayed(delayStart);
     _state = ConfettiControllerState.playing;
     notifyListeners();
   }
