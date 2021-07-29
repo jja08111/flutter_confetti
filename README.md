@@ -1,4 +1,4 @@
-# 꿀밤 앱에서 
+# 꿀밤 앱에서 이용중
 
 Blast some confetti all over the screen and celebrate user achievements!
 
